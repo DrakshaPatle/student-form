@@ -14,24 +14,19 @@ export function deleteStudent(rollNo) {
   return { type: DELETE_STUDENT, payload: rollNo };
 }
 
-
-
 export const fetchStudentsSuccess = (students) => ({
     type: FETCH_STUDENTS_SUCCESS,
     payload: students,
   });
   
 
-
-
   export const fetchStudents = () => {
     return async (dispatch) => {
       try {
-        // Make an API request to fetch students from the backend
+        //API request to fetch students from the backend
         const response = await fetch('http://localhost:5000/students'); 
         const students = await response.json();
   
-       
         dispatch(fetchStudentsSuccess(students));
       } catch (error) {
        

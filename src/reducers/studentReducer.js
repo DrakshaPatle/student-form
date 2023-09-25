@@ -1,10 +1,8 @@
 
 import { ADD_STUDENT, EDIT_STUDENT, DELETE_STUDENT ,FETCH_STUDENTS_SUCCESS } from '../actions/studentActions';
-
 const initialState = {
   students: [],
 };
-
 function studentReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_STUDENT:
@@ -13,9 +11,19 @@ function studentReducer(state = initialState, action) {
         students: [...state.students, action.payload],
       };
     case EDIT_STUDENT:
-      //  edit logic 
+        return {
+            ...state,
+            students: state.students.map((student) =>
+              student.rollNo === action.payload.rollNo ? action.payload : student
+            ),
+          };
     case DELETE_STUDENT:
-      //  delete logic
+        return {
+            ...state,
+            students: state.students.map((student) =>
+              student.rollNo === action.payload.rollNo ? action.payload : student
+            ),
+          };
       case FETCH_STUDENTS_SUCCESS:
         return {
           ...state,

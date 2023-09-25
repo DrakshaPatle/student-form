@@ -1,15 +1,19 @@
 
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import { editStudent, deleteStudent } from '../actions/studentActions';
 function StudentList() {
   const students = useSelector((state) => state.students);
 
   const [searchText, setSearchText] = useState('');
-
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const handleSearch = () => {
-   
-//search
+
+    const filteredStudents = students.filter((student) => {
+        const fullName = `${student.firstName} ${student.lastName}`;
+        return fullName.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setFilteredStudents(filteredStudents);
   };
 
   return (
@@ -25,7 +29,9 @@ function StudentList() {
         {students.map((student) => (
           <li key={student.rollNo}>
             {student.firstName} {student.lastName}
-            {/* edit and delete butn  */}
+            <button onClick={() => handleEditClick(student)}>Edit</button>
+            <button onClick={() => handleDeleteClick(student.rollNo)}>Delete</button>
+
           </li>
         ))}
       </ul>
