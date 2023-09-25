@@ -1,40 +1,45 @@
+// StudentList.js
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchStudents } from '../actions/studentActions';
+import { Link } from 'react-router-dom';
+import { deleteStudent } from '../actions/studentActions';
 
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { editStudent, deleteStudent } from '../actions/studentActions';
 function StudentList() {
-  const students = useSelector((state) => state.students);
+  const dispatch = useDispatch();
 
-  const [searchText, setSearchText] = useState('');
-  const [filteredStudents, setFilteredStudents] = useState([]);
-  const handleSearch = () => {
-
-    const filteredStudents = students.filter((student) => {
-        const fullName = `${student.firstName} ${student.lastName}`;
-        return fullName.toLowerCase().includes(searchText.toLowerCase());
-      });
-      setFilteredStudents(filteredStudents);
+  const handleDelete = (rollNo) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      dispatch(deleteStudent(rollNo));
+    }
   };
+  const students = useSelector((state) => state.students);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    dispatch(fetchStudents());
+  }, [dispatch]);
+
+  const filteredStudents = students.filter((student) =>
+    student.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
       <input
         type="text"
         placeholder="Search by name"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <button onClick={handleSearch}>Search</button>
-      <ul>
-        {students.map((student) => (
-          <li key={student.rollNo}>
-            {student.firstName} {student.lastName}
-            <button onClick={() => handleEditClick(student)}>Edit</button>
-            <button onClick={() => handleDeleteClick(student.rollNo)}>Delete</button>
+      {filteredStudents.map((student) => (
+        <div key={student.rollNo}>
+          <Link to={`/students/edit/${student.rollNo}`}>Edit</Link>
 
-          </li>
-        ))}
-      </ul>
+          <button onClick={() => handleDelete(student.rollNo)}>Delete</button>
+
+        </div>
+      ))}
     </div>
   );
 }
